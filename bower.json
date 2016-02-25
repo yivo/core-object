@@ -28,8 +28,10 @@
     "gulpfile.*"
   ],
   "dependencies": {
-    "lodash": "^3.10.0",
-    "yess": "^1.0.0",
-    "publisher-subscriber": "^1.0.0"
+    "coffee-concerns": "^1.0.4",
+    "callbacks": "yivo/callbacks",
+    "publisher-subscriber": "^1.0.5",
+    "construct-with": "^1.0.4",
+    "property-accessors": "^1.0.2"
   }
 }
