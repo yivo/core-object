@@ -1,6 +1,6 @@
 {
   "name": "core-object",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Base class for custom subclasses in JavaScript",
   "main": "build/core-object.js",
   "authors": [

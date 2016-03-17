@@ -1,6 +1,6 @@
 {
   "name": "core-object",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Base class for custom subclasses in JavaScript",
   "main": "build/core-object.js",
   "devDependencies": {
@@ -31,7 +31,7 @@
     "callbacks": "yivo/callbacks",
     "publisher-subscriber": "^1.0.5",
     "construct-with": "^1.0.4",
-    "property-accessors": "^1.0.2"
+    "property-accessors": "yivo/property-accessors"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
