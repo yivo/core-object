@@ -1,41 +1,24 @@
 class CoreObject
-  @include Callbacks
-  @include PublisherSubscriber
-  @include ConstructWith
+  @include Initializable
+  @include Finalizable
   @include PropertyAccessors
-
+  @include PublisherSubscriber
+  @include Callbacks
+  
   generateID = __root__._?.generateID ? do -> n = 0; (-> ++n)
 
-  constructor: (parameters) ->
-    @oid        = generateID()
-    @destroyed  = no
-    @destroying = no
-    @initialize(parameters)
+  constructor: ->
+    @oid = generateID()
+    @initialize.apply(this, arguments)
 
   result: (property) ->
     value = this[property]
-    if typeof value is 'function' then this[property]() else value
+    if typeof value is 'function' then value.apply(this, arguments) else value
 
-  toString: ->
-    (@constructor.name or '<Class name not available>') + "##{@oid}"
-
-  destroy: (options) ->
-    unless @destroyed
-      @destroying = yes
-
-      # Run destructor
-      @destructor?(options)
-
-      # Event destroy
-      @notify('destroy', this)
-
-      # Remove own event subscriptions
-      @stopListening()
-
-      # Remove outer event subscriptions
-      @off()
-
-      @options    = null
-      @destroyed  = yes
-      @destroying = no
+  @finalizer ->
+    @notify('finalize', this)
+    @stopListening()
+    @off()
     this
+
+  @VERSION: '1.1.0'

@@ -1,71 +1,58 @@
+###!
+# core-object 1.1.0 | https://github.com/yivo/core-object | MIT License
+###
+
 ((factory) ->
 
-  # Browser and WebWorker
-  root = if typeof self is 'object' and self?.self is self
-    self
+  __root__ = 
+    # The root object for Browser or Web Worker
+    if typeof self is 'object' and self isnt null and self.self is self
+      self
 
-  # Server
-  else if typeof global is 'object' and global?.global is global
-    global
+    # The root object for Server-side JavaScript Runtime
+    else if typeof global is 'object' and global isnt null and global.global is global
+      global
 
-  # AMD
-  if typeof define is 'function' and define.amd
-    define ['callbacks', 'publisher-subscriber', 'construct-with', 'property-accessors', 'coffee-concerns', 'exports'], (Callbacks, PublisherSubscriber, ConstructWith, PropertyAccessors) ->
-      root.CoreObject = factory(root, Callbacks, PublisherSubscriber, ConstructWith, PropertyAccessors)
+    else
+      Function('return this')()
 
-  # CommonJS
-  else if typeof module is 'object' and module isnt null and
-          module.exports? and typeof module.exports is 'object'
-    module.exports = factory(root, require('callbacks'), require('publisher-subscriber'), require('construct-with'), require('property-accessors'), require('coffee-concerns'))
+  # Asynchronous Module Definition (AMD)
+  if typeof define is 'function' and typeof define.amd is 'object' and define.amd isnt null
+    define ['initializable', 'finalizable', 'publisher-subscriber', 'pub-sub-callback-api', 'property-accessors-node', 'coffee-concerns'], (Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors) ->
+      __root__.CoreObject = factory(__root__, Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors)
 
-  # Browser and the rest
+  # Server-side JavaScript Runtime compatible with CommonJS Module Spec
+  else if typeof module is 'object' and module isnt null and typeof module.exports is 'object' and module.exports isnt null
+    module.exports = factory(__root__, require('initializable'), require('finalizable'), require('publisher-subscriber'), require('pub-sub-callback-api'), require('property-accessors-node'), require('coffee-concerns'))
+
+  # Browser, Web Worker and the rest
   else
-    root.CoreObject = factory(root, root.Callbacks, root.PublisherSubscriber, root.ConstructWith, root.PropertyAccessors)
+    __root__.CoreObject = factory(__root__, Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors)
 
   # No return value
   return
 
-)((__root__, Callbacks, PublisherSubscriber, ConstructWith, PropertyAccessors) ->
+)((__root__, Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors) ->
   class CoreObject
-    @include Callbacks
-    @include PublisherSubscriber
-    @include ConstructWith
+    @include Initializable
+    @include Finalizable
     @include PropertyAccessors
-  
+    @include PublisherSubscriber
+    @include Callbacks
+    
     generateID = __root__._?.generateID ? do -> n = 0; (-> ++n)
   
-    constructor: (parameters) ->
-      @oid        = generateID()
-      @destroyed  = no
-      @destroying = no
-      @initialize(parameters)
+    constructor: ->
+      @oid = generateID()
+      @initialize.apply(this, arguments)
   
     result: (property) ->
       value = this[property]
-      if typeof value is 'function' then this[property]() else value
+      if typeof value is 'function' then value.apply(this, arguments) else value
   
-    toString: ->
-      (@constructor.name or '<Class name not available>') + "##{@oid}"
-  
-    destroy: (options) ->
-      unless @destroyed
-        @destroying = yes
-  
-        # Run destructor
-        @destructor?(options)
-  
-        # Event destroy
-        @notify('destroy', this)
-  
-        # Remove own event subscriptions
-        @stopListening()
-  
-        # Remove outer event subscriptions
-        @off()
-  
-        @options    = null
-        @destroyed  = yes
-        @destroying = no
+    @finalizer ->
+      @notify('finalize', this)
+      @stopListening()
+      @off()
       this
-  
 )

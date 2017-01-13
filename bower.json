@@ -1,37 +1,31 @@
 {
   "name": "core-object",
-  "version": "1.0.1",
-  "description": "Base class for custom subclasses in JavaScript",
+  "description": "Universal JavaScript base class",
   "main": "build/core-object.js",
   "authors": [
-    "Yaroslav Konoplov <yaroslav@inbox.com>"
+    "Yaroslav Konoplov <eahome00@gmail.com>"
   ],
   "license": "MIT",
   "keywords": [
-    "publisher-subscriber",
-    "events",
-    "callbacks"
+    "base",
+    "class",
+    "core",
+    "object"
   ],
   "homepage": "https://github.com/yivo/core-object",
-  "moduleType": [
-    "amd",
-    "globals",
-    "node"
-  ],
   "ignore": [
+    "**/.*",
     "node_modules",
     "bower_components",
     "test",
-    "tests",
-    "spec",
-    "coffeespec",
-    "gulpfile.*"
+    "tests"
   ],
   "dependencies": {
-    "coffee-concerns": "^1.0.4",
-    "callbacks": "yivo/callbacks",
-    "publisher-subscriber": "^1.0.5",
-    "construct-with": "^1.0.4",
-    "property-accessors": "^1.0.2"
+    "coffee-concerns": "^1.0.10",
+    "finalizable": "^1.0.0",
+    "initializable": "^1.0.0",
+    "publisher-subscriber": "^1.0.11",
+    "pub-sub-callback-api": "^1.1.1",
+    "property-accessors": "^1.0.12"
   }
 }

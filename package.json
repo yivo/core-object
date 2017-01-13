@@ -1,38 +1,8 @@
 {
   "name": "core-object",
-  "version": "1.0.1",
-  "description": "Base class for custom subclasses in JavaScript",
+  "version": "1.1.0",
+  "description": "Universal JavaScript base class",
   "main": "build/core-object.js",
-  "devDependencies": {
-    "benchmark": "^1.0.0",
-    "del": "^1.1.1",
-    "codo": "^2.0.11",
-    "coffee-concerns": "^1.0.4",
-    "gulp-coffee": "^2.3.1",
-    "gulp-connect": "^2.2.0",
-    "gulp-concat": "^2.5.2",
-    "gulp": "^3.8.11",
-    "gulp-ejs": "^1.2.1",
-    "gulp-iife-wrap": "^1.0.2",
-    "gulp-lazyload": "yivo/gulp-lazyload",
-    "gulp-plumber": "^1.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-preprocess": "^1.2.0",
-    "gulp-uglify": "^1.2.0",
-    "jasmine": "^2.2.1",
-    "gulp-replace": "^0.5.4",
-    "jsdom": "^0.11.1",
-    "microtime": "^1.4.2",
-    "preprocess": "^2.1.1",
-    "coffee-script": "^1.9.2"
-  },
-  "dependencies": {
-    "coffee-concerns": "^1.0.4",
-    "callbacks": "yivo/callbacks",
-    "publisher-subscriber": "^1.0.5",
-    "construct-with": "^1.0.4",
-    "property-accessors": "yivo/property-accessors"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -41,14 +11,30 @@
     "url": "git+https://github.com/yivo/core-object.git"
   },
   "keywords": [
-    "publisher-subscriber",
-    "events",
-    "core-object"
+    "base",
+    "class",
+    "core",
+    "object"
   ],
-  "author": "Yaroslav Konoplov <yaroslav@inbox.com>",
+  "author": "Yaroslav Konoplov <eahome00@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/yivo/core-object/issues"
   },
-  "homepage": "https://github.com/yivo/core-object#readme"
+  "homepage": "https://github.com/yivo/core-object#readme",
+  "dependencies": {
+    "coffee-concerns": "^1.0.10",
+    "finalizable": "^1.0.0",
+    "initializable": "^1.0.0",
+    "publisher-subscriber": "^1.0.11",
+    "pub-sub-callback-api": "^1.1.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-coffee": "^2.3.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-umd-wrap": "^1.0.7",
+    "property-accessors-node": "^1.0.12"
+  }
 }

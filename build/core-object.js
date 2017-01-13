@@ -1,28 +1,35 @@
+
+/*!
+ * core-object 1.1.0 | https://github.com/yivo/core-object | MIT License
+ */
+
 (function() {
   (function(factory) {
-    var root;
-    root = typeof self === 'object' && (typeof self !== "undefined" && self !== null ? self.self : void 0) === self ? self : typeof global === 'object' && (typeof global !== "undefined" && global !== null ? global.global : void 0) === global ? global : void 0;
-    if (typeof define === 'function' && define.amd) {
-      define(['callbacks', 'publisher-subscriber', 'construct-with', 'property-accessors', 'coffee-concerns', 'exports'], function(Callbacks, PublisherSubscriber, ConstructWith, PropertyAccessors) {
-        return root.CoreObject = factory(root, Callbacks, PublisherSubscriber, ConstructWith, PropertyAccessors);
+    var __root__;
+    __root__ = typeof self === 'object' && self !== null && self.self === self ? self : typeof global === 'object' && global !== null && global.global === global ? global : Function('return this')();
+    if (typeof define === 'function' && typeof define.amd === 'object' && define.amd !== null) {
+      define(['initializable', 'finalizable', 'publisher-subscriber', 'pub-sub-callback-api', 'property-accessors-node', 'coffee-concerns'], function(Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors) {
+        return __root__.CoreObject = factory(__root__, Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors);
       });
-    } else if (typeof module === 'object' && module !== null && (module.exports != null) && typeof module.exports === 'object') {
-      module.exports = factory(root, require('callbacks'), require('publisher-subscriber'), require('construct-with'), require('property-accessors'), require('coffee-concerns'));
+    } else if (typeof module === 'object' && module !== null && typeof module.exports === 'object' && module.exports !== null) {
+      module.exports = factory(__root__, require('initializable'), require('finalizable'), require('publisher-subscriber'), require('pub-sub-callback-api'), require('property-accessors-node'), require('coffee-concerns'));
     } else {
-      root.CoreObject = factory(root, root.Callbacks, root.PublisherSubscriber, root.ConstructWith, root.PropertyAccessors);
+      __root__.CoreObject = factory(__root__, Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors);
     }
-  })(function(__root__, Callbacks, PublisherSubscriber, ConstructWith, PropertyAccessors) {
+  })(function(__root__, Initializable, Finalizable, PublisherSubscriber, Callbacks, PropertyAccessors) {
     var CoreObject;
     return CoreObject = (function() {
       var generateID, ref, ref1;
 
-      CoreObject.include(Callbacks);
+      CoreObject.include(Initializable);
+
+      CoreObject.include(Finalizable);
+
+      CoreObject.include(PropertyAccessors);
 
       CoreObject.include(PublisherSubscriber);
 
-      CoreObject.include(ConstructWith);
-
-      CoreObject.include(PropertyAccessors);
+      CoreObject.include(Callbacks);
 
       generateID = (ref = (ref1 = __root__._) != null ? ref1.generateID : void 0) != null ? ref : (function() {
         var n;
@@ -32,42 +39,27 @@
         };
       })();
 
-      function CoreObject(parameters) {
+      function CoreObject() {
         this.oid = generateID();
-        this.destroyed = false;
-        this.destroying = false;
-        this.initialize(parameters);
+        this.initialize.apply(this, arguments);
       }
 
       CoreObject.prototype.result = function(property) {
         var value;
         value = this[property];
         if (typeof value === 'function') {
-          return this[property]();
+          return value.apply(this, arguments);
         } else {
           return value;
         }
       };
 
-      CoreObject.prototype.toString = function() {
-        return (this.constructor.name || '<Class name not available>') + ("#" + this.oid);
-      };
-
-      CoreObject.prototype.destroy = function(options) {
-        if (!this.destroyed) {
-          this.destroying = true;
-          if (typeof this.destructor === "function") {
-            this.destructor(options);
-          }
-          this.notify('destroy', this);
-          this.stopListening();
-          this.off();
-          this.options = null;
-          this.destroyed = true;
-          this.destroying = false;
-        }
+      CoreObject.finalizer(function() {
+        this.notify('finalize', this);
+        this.stopListening();
+        this.off();
         return this;
-      };
+      });
 
       return CoreObject;
 
