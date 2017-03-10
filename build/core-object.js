@@ -1,6 +1,6 @@
 
 /*!
- * core-object 1.1.0 | https://github.com/yivo/core-object | MIT License
+ * core-object 1.1.1 | https://github.com/yivo/core-object | MIT License
  */
 
 (function() {
@@ -45,10 +45,16 @@
       }
 
       CoreObject.prototype.result = function(property) {
-        var value;
+        var args, i, l, value;
         value = this[property];
         if (typeof value === 'function') {
-          return value.apply(this, arguments);
+          args = [];
+          i = 0;
+          l = arguments.length;
+          while (++i < l) {
+            args.push(arguments[i]);
+          }
+          return value.apply(this, args);
         } else {
           return value;
         }
@@ -60,6 +66,8 @@
         this.off();
         return this;
       });
+
+      CoreObject.VERSION = '1.1.1';
 
       return CoreObject;
 

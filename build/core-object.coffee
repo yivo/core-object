@@ -1,5 +1,5 @@
 ###!
-# core-object 1.1.0 | https://github.com/yivo/core-object | MIT License
+# core-object 1.1.1 | https://github.com/yivo/core-object | MIT License
 ###
 
 ((factory) ->
@@ -48,11 +48,20 @@
   
     result: (property) ->
       value = this[property]
-      if typeof value is 'function' then value.apply(this, arguments) else value
+      if typeof value is 'function' 
+        args = []
+        i    = 0
+        l    = arguments.length
+        args.push(arguments[i]) while ++i < l
+        value.apply(this, args)
+      else
+        value
   
     @finalizer ->
       @notify('finalize', this)
       @stopListening()
       @off()
       this
+  
+    @VERSION: '1.1.1'
 )

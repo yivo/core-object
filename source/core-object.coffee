@@ -13,7 +13,14 @@ class CoreObject
 
   result: (property) ->
     value = this[property]
-    if typeof value is 'function' then value.apply(this, arguments) else value
+    if typeof value is 'function' 
+      args = []
+      i    = 0
+      l    = arguments.length
+      args.push(arguments[i]) while ++i < l
+      value.apply(this, args)
+    else
+      value
 
   @finalizer ->
     @notify('finalize', this)
@@ -21,4 +28,4 @@ class CoreObject
     @off()
     this
 
-  @VERSION: '1.1.0'
+  @VERSION: '1.1.1'
